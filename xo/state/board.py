@@ -1,5 +1,6 @@
 from __future__ import annotations
 from enum import Enum
+from typing import List, Optional
 
 
 class Piece(Enum):
@@ -36,11 +37,43 @@ class Board:
             ]
         )
 
-    def to_array(self):
+    def to_array(self) -> List[Piece]:
         return self._array
 
-    def has_winner(self):
-        pass
+    def has_winner(self) -> bool:
+        return bool(self.get_winning_player())
 
-    def get_winning_player(self):
-        pass
+    @staticmethod
+    def _get_winner_for_run(run: List[Piece]) -> Optional[Piece]:
+        first_piece = run[0]
+
+        if first_piece == Piece.BLANK:
+            return None
+
+        if all(map(lambda p: p == first_piece, run)):
+            return first_piece
+
+        return None
+
+    def _run_indices_to_pieces(self, run: List[int]) -> List[Piece]:
+        return [self._array[i] for i in run]
+         
+
+    def get_winning_player(self) -> Optional[Piece]:
+        runs = (
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+            [1, 4, 7],
+            [3, 4, 5]
+        )
+
+        for run in map(self._run_indices_to_pieces, runs):
+            winning_piece = self._get_winner_for_run(run)
+
+            if winning_piece:
+                return winning_piece
+
+        return None
