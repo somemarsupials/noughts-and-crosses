@@ -1,0 +1,10 @@
+# editor
+*.swp
+
+# environment
+.venv/
+.python-version
+
+# compiled python
+__pycache__/
+*.pyc
