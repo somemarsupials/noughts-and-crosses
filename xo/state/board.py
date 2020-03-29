@@ -9,7 +9,7 @@ class Piece(Enum):
     NOUGHT = 1
     CROSS = 2
 
-    def invert(self) -> Piece:
+    def invert(self):
         if self == Piece.CROSS:
             return Piece.NOUGHT
 
@@ -58,9 +58,10 @@ class Board:
         return [i for i, p in enumerate(self._array) if p == Piece.BLANK]
 
     def to_nn_input(self):
-        us = [p == self._next_player for p in self._array]
-        them = [p == self._next_player.invert() for p in self._array]
-        return tf.constant(us + them, shape=(1, 18))
+        noughts = [p == Piece.NOUGHT for p in self._array]
+        crosses = [p == Piece.CROSS for p in self._array]
+        players = [self._next_player == Piece.NOUGHT, self._next_player == Piece.CROSS]
+        return tf.constant(noughts + crosses + players, shape=(1, 20))
 
     def has_winner(self):
         return bool(self.get_winning_player())

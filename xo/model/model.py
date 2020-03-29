@@ -10,7 +10,7 @@ class Model:
 
     @staticmethod
     def create(layer_size=20, num_layers=2, activation=nn.relu):
-        inputs = keras.Input(shape=(Board.SIZE * 2,), name="board")
+        inputs = keras.Input(shape=(Board.SIZE * 2 + 2,), name="board")
         layer = inputs
 
         for index in range(num_layers):
