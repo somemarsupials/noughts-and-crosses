@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import List
 from tensorflow import keras, nn
 
 from xo.state import Board

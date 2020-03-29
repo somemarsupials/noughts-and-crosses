@@ -33,3 +33,15 @@ def _board_to_string(board: Board) -> str:
 
 def print_board(board: Board) -> None:
     print(indent(_board_to_string(board), "\t"))
+
+
+def print_history(board: Board) -> None:
+    states = [board]
+
+    while board.previous is not None:
+        states.append(board.previous)
+        board = board.previous
+
+    for index, state in enumerate(reversed(states)):
+        print("\n{} {}\n".format(index, "~" * 20))
+        print_board(state)

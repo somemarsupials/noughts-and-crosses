@@ -10,10 +10,10 @@ class Piece(Enum):
     CROSS = 2
 
     def invert(self) -> Piece:
-        if self.value == Piece.CROSS:
+        if self == Piece.CROSS:
             return Piece.NOUGHT
 
-        if self.value == Piece.NOUGHT:
+        if self == Piece.NOUGHT:
             return Piece.CROSS
 
         raise ValueError("cannot invert blank piece")
@@ -23,9 +23,12 @@ class Board:
     SIZE = 9
     ROW_LENGTH = 3
 
-    def __init__(self, board_positions, previous=None):
+    def __init__(
+        self, board_positions, previous=None, next_player=Piece.CROSS
+    ):
         self._array = board_positions
-        self._previous = previous
+        self.previous = previous
+        self._next_player = next_player
 
     @staticmethod
     def create() -> Board:
@@ -40,16 +43,33 @@ class Board:
             self,
         )
 
+    def play(self, at_index: int) -> Board:
+        if self._array[at_index] != Piece.BLANK:
+            raise RuntimeError("cannot play on taken space")
+
+        board = self.set(at_index, self._next_player)
+        self._next_player = self._next_player.invert()
+        return board
+
     def to_array(self) -> List[Piece]:
         return self._array
 
+    def get_indices_of_blanks(self) -> List[int]:
+        return [i for i, p in enumerate(self._array) if p == Piece.BLANK]
+
     def to_nn_input(self) -> List[int]:
-        noughts = [p == Piece.NOUGHT for p in self._array]
-        crosses = [p == Piece.CROSS for p in self._array]
-        return tf.constant(noughts + crosses, shape=(1, 18))
+        us = [p == self._next_player for p in self._array]
+        them = [p == self._next_player.invert() for p in self._array]
+        return tf.constant(us + them, shape=(1, 18))
 
     def has_winner(self) -> bool:
         return bool(self.get_winning_player())
+
+    def is_full(self) -> bool:
+        return all([p != Piece.BLANK for p in self._array])
+
+    def is_game_over(self) -> bool:
+        return self.has_winner() or self.is_full()
 
     @staticmethod
     def _get_winner_for_run(run: List[Piece]) -> Optional[Piece]:
@@ -68,13 +88,17 @@ class Board:
 
     def get_winning_player(self) -> Optional[Piece]:
         runs = (
+            # horizontals
             [0, 1, 2],
             [3, 4, 5],
             [6, 7, 8],
+            # verticals
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            # diagonals
             [0, 4, 8],
             [2, 4, 6],
-            [1, 4, 7],
-            [3, 4, 5],
         )
 
         for run in map(self._run_indices_to_pieces, runs):
