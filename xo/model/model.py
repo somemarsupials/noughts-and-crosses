@@ -1,6 +1,4 @@
-from __future__ import annotations
 from tensorflow import keras, nn
-
 from xo.state import Board
 
 

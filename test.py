@@ -1,7 +1,7 @@
-from xo import Board, Piece, print_board
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-board = Board.fresh()
-board = board.set(2, Piece.CROSS)
-board = board.set(3, Piece.NOUGHT)
+from xo import Board, Model, Piece, print_history, play_to_completion
 
-print_board(board)
+board = play_to_completion(Model.create(), Board.create())
+print_history(board)

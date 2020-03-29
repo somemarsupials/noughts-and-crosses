@@ -1,5 +1,4 @@
 from textwrap import indent
-
 from xo.state import Board, Piece
 
 

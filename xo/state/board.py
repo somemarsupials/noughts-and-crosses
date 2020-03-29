@@ -1,22 +1,5 @@
-from __future__ import annotations
-from enum import Enum
-from typing import List, Optional
 import tensorflow as tf
-
-
-class Piece(Enum):
-    BLANK = 0
-    NOUGHT = 1
-    CROSS = 2
-
-    def invert(self):
-        if self == Piece.CROSS:
-            return Piece.NOUGHT
-
-        if self == Piece.NOUGHT:
-            return Piece.CROSS
-
-        raise ValueError("cannot invert blank piece")
+from .piece import Piece
 
 
 class Board:
@@ -60,7 +43,10 @@ class Board:
     def to_nn_input(self):
         noughts = [p == Piece.NOUGHT for p in self._array]
         crosses = [p == Piece.CROSS for p in self._array]
-        players = [self._next_player == Piece.NOUGHT, self._next_player == Piece.CROSS]
+        players = [
+            self._next_player == Piece.NOUGHT,
+            self._next_player == Piece.CROSS,
+        ]
         return tf.constant(noughts + crosses + players, shape=(1, 20))
 
     def has_winner(self):
