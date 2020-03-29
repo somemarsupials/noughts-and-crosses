@@ -31,10 +31,10 @@ class Board:
         self._next_player = next_player
 
     @staticmethod
-    def create() -> Board:
+    def create():
         return Board([Piece.BLANK for _ in range(Board.SIZE)])
 
-    def set(self, index_to_set: int, new_value: Piece) -> Board:
+    def set(self, index_to_set, new_value):
         return Board(
             [
                 new_value if index == index_to_set else old_value
@@ -43,7 +43,7 @@ class Board:
             self,
         )
 
-    def play(self, at_index: int) -> Board:
+    def play(self, at_index):
         if self._array[at_index] != Piece.BLANK:
             raise RuntimeError("cannot play on taken space")
 
@@ -51,28 +51,28 @@ class Board:
         self._next_player = self._next_player.invert()
         return board
 
-    def to_array(self) -> List[Piece]:
+    def to_array(self):
         return self._array
 
-    def get_indices_of_blanks(self) -> List[int]:
+    def get_indices_of_blanks(self):
         return [i for i, p in enumerate(self._array) if p == Piece.BLANK]
 
-    def to_nn_input(self) -> List[int]:
+    def to_nn_input(self):
         us = [p == self._next_player for p in self._array]
         them = [p == self._next_player.invert() for p in self._array]
         return tf.constant(us + them, shape=(1, 18))
 
-    def has_winner(self) -> bool:
+    def has_winner(self):
         return bool(self.get_winning_player())
 
-    def is_full(self) -> bool:
+    def is_full(self):
         return all([p != Piece.BLANK for p in self._array])
 
-    def is_game_over(self) -> bool:
+    def is_game_over(self):
         return self.has_winner() or self.is_full()
 
     @staticmethod
-    def _get_winner_for_run(run: List[Piece]) -> Optional[Piece]:
+    def _get_winner_for_run(run):
         first_piece = run[0]
 
         if first_piece == Piece.BLANK:
@@ -83,10 +83,10 @@ class Board:
 
         return None
 
-    def _run_indices_to_pieces(self, run: List[int]) -> List[Piece]:
+    def _run_indices_to_pieces(self, run):
         return [self._array[i] for i in run]
 
-    def get_winning_player(self) -> Optional[Piece]:
+    def get_winning_player(self):
         runs = (
             # horizontals
             [0, 1, 2],

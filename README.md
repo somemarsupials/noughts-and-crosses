@@ -12,4 +12,4 @@ Alternately, run the following to setup and/or activate the project's virtual en
 
 ### Developing
 
-Use the format and typecheck scripts as you're working!
+Use the format scripts as you're working!

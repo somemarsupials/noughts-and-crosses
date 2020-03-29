@@ -2,7 +2,7 @@ from xo.model import Model
 from xo.state import Board, Piece
 
 
-def get_optimal_move(model: Model, board: Board) -> int:
+def get_optimal_move(model, board):
     blank_indices = board.get_indices_of_blanks()
 
     # work out which player!
@@ -14,7 +14,7 @@ def get_optimal_move(model: Model, board: Board) -> int:
     return max(move_scores, key=move_scores.get)
 
 
-def play_to_completion(model: Model, board=Board.create()) -> Board:
+def play_to_completion(model, board=Board.create()):
     while not board.is_game_over():
         move = get_optimal_move(model, board)
         board = board.play(move)

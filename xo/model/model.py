@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import List
 from tensorflow import keras, nn
 
 from xo.state import Board
@@ -10,7 +9,7 @@ class Model:
         self._model = network
 
     @staticmethod
-    def create(layer_size=20, num_layers=2, activation=nn.relu) -> Model:
+    def create(layer_size=20, num_layers=2, activation=nn.relu):
         inputs = keras.Input(shape=(Board.SIZE * 2,), name="board")
         layer = inputs
 
@@ -24,8 +23,8 @@ class Model:
         outputs = keras.layers.Dense(1, name="score")(layer)
         return Model(keras.Model(inputs=inputs, outputs=outputs))
 
-    def predict(self, input_values: List[int]) -> float:
+    def predict(self, input_values):
         return self._model(input_values)
 
-    def train(self, board: Board) -> None:
+    def train(self, board):
         pass
