@@ -34,20 +34,20 @@ class Board:
     def create():
         return Board([Piece.BLANK for _ in range(Board.SIZE)])
 
-    def set(self, index_to_set, new_value):
+    def set_piece_at_index(self, index_to_set, new_value):
         return Board(
             [
                 new_value if index == index_to_set else old_value
                 for index, old_value in enumerate(self._array)
             ],
-            self,
+            previous=self,
         )
 
     def play(self, at_index):
         if self._array[at_index] != Piece.BLANK:
             raise RuntimeError("cannot play on taken space")
 
-        board = self.set(at_index, self._next_player)
+        board = self.set_piece_at_index(at_index, self._next_player)
         self._next_player = self._next_player.invert()
         return board
 

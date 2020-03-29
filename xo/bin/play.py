@@ -1,11 +1,9 @@
-from xo.model import Model
-from xo.state import Board, Piece
+from xo.state import Board
 
 
 def get_optimal_move(model, board):
     blank_indices = board.get_indices_of_blanks()
 
-    # work out which player!
     move_scores = {
         i: model.predict(board.play(i).to_nn_input())
         for i in blank_indices
