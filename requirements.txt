@@ -18,7 +18,7 @@ Keras-Applications==1.0.8
 Keras-Preprocessing==1.1.0
 Markdown==3.2.1
 mypy-extensions==0.4.3
-numpy==1.18.2
+numpy==1.22.0
 oauthlib==3.1.0
 opt-einsum==3.2.0
 pathspec==0.7.0
